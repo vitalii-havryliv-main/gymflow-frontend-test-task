@@ -48,3 +48,5 @@ nx.bat
 
 /doc
 
+# Nx temporary build artifacts
+tmp/
