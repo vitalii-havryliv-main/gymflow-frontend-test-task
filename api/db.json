@@ -1,0 +1,26 @@
+{
+  "users": [
+    {
+      "id": "f2a10ed7-590c-422f-b5b3-5b2bfd898684",
+      "fullName": "dasfasfa",
+      "role": "STAFF",
+      "createdAt": "2025-08-08T12:45:45.835Z",
+      "updatedAt": "2025-08-08T12:45:45.835Z"
+    },
+    {
+      "id": "cdbea888-9ee0-4a53-a0e6-a6d9357340e6",
+      "fullName": "Dasha",
+      "role": "MEMBER",
+      "dateOfBirth": "2000-02-07T00:00:00.000Z",
+      "createdAt": "2025-08-08T12:42:46.433Z",
+      "updatedAt": "2025-08-08T12:42:46.433Z"
+    },
+    {
+      "id": "0a883b20-8c61-4bd8-91a3-c9fa278af7f0",
+      "fullName": "Vlad",
+      "role": "STAFF",
+      "createdAt": "2025-08-08T12:28:17.969Z",
+      "updatedAt": "2025-08-08T12:28:17.969Z"
+    }
+  ]
+}
