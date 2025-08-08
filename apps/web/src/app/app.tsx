@@ -7,46 +7,6 @@ import {
 } from 'shared-store';
 import { createUserSchema } from 'shared-validation';
 
-function DemoForm() {
-  const { create } = useUsers();
-  const [name, setName] = React.useState('');
-
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const input = { fullName: name, role: 'STAFF' as const };
-    createUserSchema.pick({ fullName: true, role: true }).parse(input);
-    await create(input);
-    setName('');
-  }
-
-  return (
-    <form onSubmit={onSubmit} style={{ display: 'flex', gap: 8 }}>
-      <input
-        placeholder="Full name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        style={{ padding: 8, border: '1px solid #ddd', borderRadius: 6 }}
-      />
-      <button type="submit" style={{ padding: '8px 12px' }}>
-        Quick add
-      </button>
-    </form>
-  );
-}
-
-function DemoList() {
-  const { users } = useUsers();
-  return (
-    <ul style={{ marginTop: 16 }}>
-      {users.map((u) => (
-        <li key={u.id}>
-          {u.fullName} — {u.role}
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 function UsersList() {
   const { users } = useUsers();
   return (
@@ -63,12 +23,12 @@ function UsersList() {
           Create user
         </Link>
       </div>
-      <DemoForm />
-      <DemoList />
       <ul style={{ marginTop: 16 }}>
         {users.map((u) => (
           <li key={u.id}>
-            <Link to={`/users/${u.id}`}>{u.fullName}</Link>
+            <Link to={`/users/${u.id}`}>
+              {u.fullName} — {u.role}
+            </Link>
           </li>
         ))}
       </ul>
@@ -136,11 +96,10 @@ function UserForm() {
         <input
           type="date"
           value={dateOfBirth?.slice(0, 10) ?? ''}
-          onChange={(e) =>
-            setDateOfBirth(
-              e.target.value ? new Date(e.target.value).toISOString() : ''
-            )
-          }
+          onChange={(e) => {
+            const v = e.target.value;
+            setDateOfBirth(v ? `${v}T00:00:00.000Z` : '');
+          }}
           style={{ padding: 8, border: '1px solid #ddd', borderRadius: 6 }}
         />
         <div style={{ display: 'flex', gap: 8 }}>
@@ -164,7 +123,10 @@ function UserForm() {
 
 export default function App() {
   return (
-    <UsersProvider persistence={createLocalStoragePersistence()}>
+    <UsersProvider
+      persistence={createLocalStoragePersistence()}
+      apiBaseUrl={'http://localhost:3333'}
+    >
       <Routes>
         <Route path="/" element={<UsersList />} />
         <Route path="/users/new" element={<UserForm />} />
