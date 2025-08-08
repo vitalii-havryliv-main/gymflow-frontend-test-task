@@ -7,14 +7,14 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from 'react-native';
 import { useUsers } from 'shared-store';
-import { useUsersForm } from '../hooks/useUsersForm';
+import { Button } from '../components/Button';
 import { Field } from '../components/Field';
 import { RoleSelector } from '../components/RoleSelector';
-import { Button } from '../components/Button';
+import { useUsersForm } from '../hooks/useUsersForm';
+import { useTheme } from '../theme';
 
 type NavProp = {
   goBack: () => void;
@@ -27,6 +27,7 @@ export function UserFormScreen({
   route: { params?: { id?: string } };
   navigation: NavProp;
 }) {
+  const { theme } = useTheme();
   const id: string | undefined = route?.params?.id;
   const isEdit = Boolean(id);
   const { users, create, update, remove } = useUsers();
@@ -52,9 +53,13 @@ export function UserFormScreen({
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
       <View style={styles.content}>
-        <Text style={styles.title}>{isEdit ? 'Edit user' : 'Create user'}</Text>
+        <Text style={[styles.title, { color: theme.colors.textPrimary }]}>
+          {isEdit ? 'Edit user' : 'Create user'}
+        </Text>
         <Field
           label="Full Name"
           placeholder="Full Name"
@@ -81,11 +86,17 @@ export function UserFormScreen({
           onPress={() => setShowPicker(true)}
           style={({ pressed }) => [
             styles.dateButton,
+            {
+              borderColor: theme.colors.border,
+              backgroundColor: theme.colors.surface,
+            },
             form.formState.errors.dateOfBirth ? styles.inputError : null,
             pressed && styles.pressed,
           ]}
         >
-          <Text style={styles.dateButtonText}>
+          <Text
+            style={[styles.dateButtonText, { color: theme.colors.textPrimary }]}
+          >
             {form.watch('dateOfBirth')
               ? (form.watch('dateOfBirth') as string).slice(0, 10)
               : 'Tap to pick date'}
@@ -100,6 +111,7 @@ export function UserFormScreen({
             }
             mode="date"
             display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+            themeVariant={theme.mode}
             onChange={(_, d) => {
               setShowPicker(false);
               if (d)
@@ -122,9 +134,15 @@ export function UserFormScreen({
           title={isEdit ? 'Save' : 'Create'}
           onPress={onSubmit}
           disabled={!form.formState.isValid}
+          style={styles.createButton}
         />
         {isEdit && (
-          <Button title="Remove User" onPress={onRemove} variant="danger" />
+          <Button
+            title="Remove User"
+            onPress={onRemove}
+            variant="danger"
+            style={styles.removeButton}
+          />
         )}
       </View>
     </SafeAreaView>
@@ -155,9 +173,9 @@ const styles = StyleSheet.create({
   pressed: { opacity: 0.7 },
   dateButton: {
     borderWidth: 1,
-    borderColor: '#e5e7eb',
     borderRadius: 8,
-    padding: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
     marginTop: 8,
   },
   dateButtonText: { color: '#111827' },
@@ -177,4 +195,10 @@ const styles = StyleSheet.create({
   },
   buttonDangerPressed: { opacity: 0.85 },
   buttonDangerText: { color: 'white', textAlign: 'center' },
+  createButton: {
+    marginTop: 12,
+  },
+  removeButton: {
+    marginTop: 12,
+  },
 });

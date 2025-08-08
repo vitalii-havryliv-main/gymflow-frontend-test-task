@@ -3,8 +3,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { Platform, StatusBar } from 'react-native';
 import { UsersProvider, createAsyncStoragePersistence } from 'shared-store';
+import { ThemeToggle } from './components/ThemeToggle';
 import { UserFormScreen } from './screens/UserFormScreen';
 import { UsersListScreen } from './screens/UsersListScreen';
+import { ThemeProvider, useTheme } from './theme';
 
 type RootStackParamList = {
   UsersList: undefined;
@@ -13,7 +15,8 @@ type RootStackParamList = {
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-export default function App() {
+function AppNavigator() {
+  const { theme } = useTheme();
   const API_BASE_URL =
     Platform.OS === 'android'
       ? 'http://10.0.2.2:3333'
@@ -24,8 +27,15 @@ export default function App() {
       apiBaseUrl={API_BASE_URL}
     >
       <NavigationContainer>
-        <StatusBar barStyle="dark-content" />
-        <Stack.Navigator>
+        <StatusBar barStyle={theme.statusBarStyle} />
+        <Stack.Navigator
+          screenOptions={{
+            headerRight: () => <ThemeToggle />,
+            headerStyle: { backgroundColor: theme.colors.background },
+            headerTintColor: theme.colors.textPrimary,
+            headerTitleStyle: { color: theme.colors.textPrimary },
+          }}
+        >
           <Stack.Screen
             name="UsersList"
             component={UsersListScreen}
@@ -39,5 +49,13 @@ export default function App() {
         </Stack.Navigator>
       </NavigationContainer>
     </UsersProvider>
+  );
+}
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <AppNavigator />
+    </ThemeProvider>
   );
 }
