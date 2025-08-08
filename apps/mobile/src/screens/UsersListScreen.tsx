@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useUsers } from 'shared-store';
 
@@ -11,36 +11,51 @@ export function UsersListScreen({ navigation }: { navigation: NavProp }) {
   const { users } = useUsers();
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ padding: 16 }}>
-        <Text style={{ fontSize: 22, fontWeight: '700', marginBottom: 12 }}>
-          Users
-        </Text>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.content}>
+        <Text style={styles.title}>Users</Text>
         {users.map((u) => (
           <Animated.View key={u.id} entering={FadeIn}>
-            <TouchableOpacity
+            <Pressable
               onPress={() => navigation.navigate('UserForm', { id: u.id })}
+              style={({ pressed }) => [
+                styles.listItem,
+                pressed && styles.pressed,
+              ]}
             >
-              <Text style={{ paddingVertical: 8 }}>
+              <Text style={styles.listItemText}>
                 {u.fullName} — {u.role}
               </Text>
-            </TouchableOpacity>
+            </Pressable>
           </Animated.View>
         ))}
-        <TouchableOpacity
+        <Pressable
           onPress={() => navigation.navigate('UserForm')}
-          style={{
-            marginTop: 16,
-            padding: 12,
-            backgroundColor: '#111827',
-            borderRadius: 8,
-          }}
+          style={({ pressed }) => [
+            styles.buttonPrimary,
+            pressed && styles.buttonPrimaryPressed,
+          ]}
         >
-          <Text style={{ color: 'white', textAlign: 'center' }}>
-            Create user
-          </Text>
-        </TouchableOpacity>
+          <Text style={styles.buttonPrimaryText}>Create user</Text>
+        </Pressable>
       </View>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+  content: { padding: 16 },
+  title: { fontSize: 22, fontWeight: '700', marginBottom: 12 },
+  listItem: { paddingVertical: 8, borderRadius: 8 },
+  listItemText: { color: '#111827' },
+  pressed: { opacity: 0.7 },
+  buttonPrimary: {
+    marginTop: 16,
+    padding: 12,
+    backgroundColor: '#111827',
+    borderRadius: 8,
+  },
+  buttonPrimaryPressed: { opacity: 0.8 },
+  buttonPrimaryText: { color: 'white', textAlign: 'center' },
+});

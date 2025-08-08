@@ -6,8 +6,9 @@ import {
   SafeAreaView,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
+  Pressable,
+  StyleSheet,
 } from 'react-native';
 import { useUsers } from 'shared-store';
 import { useUsersForm } from '../hooks/useUsersForm';
@@ -48,9 +49,9 @@ export function UserFormScreen({
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ padding: 16, gap: 12 }}>
-        <Text style={{ fontSize: 20, fontWeight: '700' }}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.content}>
+        <Text style={styles.title}>
           {isEdit ? 'Edit user' : 'Create user'}
         </Text>
         <TextInput
@@ -59,56 +60,52 @@ export function UserFormScreen({
           onChangeText={(t) =>
             form.setValue('fullName', t, { shouldValidate: true })
           }
-          style={{
-            borderWidth: 1,
-            borderColor: form.formState.errors.fullName ? '#ef4444' : '#e5e7eb',
-            borderRadius: 8,
-            padding: 10,
-          }}
+          style={[
+            styles.input,
+            form.formState.errors.fullName && styles.inputError,
+          ]}
         />
         {form.formState.errors.fullName && (
-          <Text style={{ color: '#ef4444' }}>
+          <Text style={styles.errorText}>
             {String(form.formState.errors.fullName.message)}
           </Text>
         )}
-        <View style={{ flexDirection: 'row', gap: 8 }}>
+        <View style={styles.roleRow}>
           {(['STAFF', 'MEMBER'] as const).map((r) => (
-            <TouchableOpacity
+            <Pressable
               key={r}
               onPress={() => form.setValue('role', r, { shouldValidate: true })}
-              style={{
-                padding: 10,
-                borderWidth: 1,
-                borderColor: form.watch('role') === r ? '#111827' : '#e5e7eb',
-                borderRadius: 8,
-              }}
+              style={({ pressed }) => [
+                styles.roleButton,
+                form.watch('role') === r
+                  ? styles.roleButtonActive
+                  : styles.roleButtonInactive,
+                pressed && styles.pressed,
+              ]}
             >
               <Text>{r}</Text>
-            </TouchableOpacity>
+            </Pressable>
           ))}
         </View>
         {form.formState.errors.role && (
-          <Text style={{ color: '#ef4444' }}>
+          <Text style={styles.errorText}>
             {String(form.formState.errors.role.message)}
           </Text>
         )}
-        <TouchableOpacity
+        <Pressable
           onPress={() => setShowPicker(true)}
-          style={{
-            borderWidth: 1,
-            borderColor: form.formState.errors.dateOfBirth
-              ? '#ef4444'
-              : '#e5e7eb',
-            borderRadius: 8,
-            padding: 12,
-          }}
+          style={({ pressed }) => [
+            styles.dateButton,
+            form.formState.errors.dateOfBirth ? styles.inputError : null,
+            pressed && styles.pressed,
+          ]}
         >
-          <Text style={{ color: '#111827' }}>
+          <Text style={styles.dateButtonText}>
             {form.watch('dateOfBirth')
               ? (form.watch('dateOfBirth') as string).slice(0, 10)
               : 'Tap to pick date'}
           </Text>
-        </TouchableOpacity>
+        </Pressable>
         {showPicker && (
           <DateTimePicker
             value={
@@ -136,26 +133,70 @@ export function UserFormScreen({
             }}
           />
         )}
-        <TouchableOpacity
+        <Pressable
           onPress={onSubmit}
-          style={{ padding: 12, backgroundColor: '#111827', borderRadius: 8 }}
+          style={({ pressed }) => [
+            styles.buttonPrimary,
+            pressed && styles.buttonPrimaryPressed,
+          ]}
           disabled={!form.formState.isValid}
         >
-          <Text style={{ color: 'white', textAlign: 'center' }}>
+          <Text style={styles.buttonPrimaryText}>
             {isEdit ? 'Save' : 'Create'}
           </Text>
-        </TouchableOpacity>
+        </Pressable>
         {isEdit && (
-          <TouchableOpacity
+          <Pressable
             onPress={onRemove}
-            style={{ padding: 12, backgroundColor: '#ef4444', borderRadius: 8 }}
+            style={({ pressed }) => [
+              styles.buttonDanger,
+              pressed && styles.buttonDangerPressed,
+            ]}
           >
-            <Text style={{ color: 'white', textAlign: 'center' }}>
+            <Text style={styles.buttonDangerText}>
               Remove User
             </Text>
-          </TouchableOpacity>
+          </Pressable>
         )}
       </View>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+  content: { padding: 16 },
+  title: { fontSize: 20, fontWeight: '700', marginBottom: 12 },
+  input: {
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    padding: 10,
+  },
+  inputError: { borderColor: '#ef4444' },
+  errorText: { color: '#ef4444', marginTop: 4 },
+  roleRow: { flexDirection: 'row', marginTop: 8 },
+  roleButton: {
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 8,
+    marginRight: 8,
+  },
+  roleButtonActive: { borderColor: '#111827' },
+  roleButtonInactive: { borderColor: '#e5e7eb' },
+  pressed: { opacity: 0.7 },
+  dateButton: {
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    padding: 12,
+    marginTop: 8,
+  },
+  dateButtonText: { color: '#111827' },
+  buttonPrimary: { padding: 12, backgroundColor: '#111827', borderRadius: 8, marginTop: 12 },
+  buttonPrimaryPressed: { opacity: 0.8 },
+  buttonPrimaryText: { color: 'white', textAlign: 'center' },
+  buttonDanger: { padding: 12, backgroundColor: '#ef4444', borderRadius: 8, marginTop: 8 },
+  buttonDangerPressed: { opacity: 0.85 },
+  buttonDangerText: { color: 'white', textAlign: 'center' },
+});
