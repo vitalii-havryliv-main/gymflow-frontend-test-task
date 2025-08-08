@@ -1,5 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useTheme } from '../theme';
 
 type Role = 'STAFF' | 'MEMBER';
 
@@ -10,6 +11,7 @@ type Props = {
 };
 
 export function RoleSelector({ value, onChange, error }: Props) {
+  const { theme } = useTheme();
   return (
     <View style={styles.container}>
       <View style={styles.row}>
@@ -19,13 +21,16 @@ export function RoleSelector({ value, onChange, error }: Props) {
             onPress={() => onChange(r)}
             style={({ pressed }) => [
               styles.button,
-              value === r ? styles.buttonActive : styles.buttonInactive,
+              {
+                borderColor:
+                  value === r ? theme.colors.primary : theme.colors.border,
+              },
               pressed && styles.pressed,
             ]}
             accessibilityRole="button"
             accessibilityState={{ selected: value === r }}
           >
-            <Text>{r}</Text>
+            <Text style={{ color: theme.colors.textPrimary }}>{r}</Text>
           </Pressable>
         ))}
       </View>
@@ -43,9 +48,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginRight: 8,
   },
-  buttonActive: { borderColor: '#111827' },
-  buttonInactive: { borderColor: '#e5e7eb' },
   pressed: { opacity: 0.7 },
   errorText: { color: '#ef4444' },
 });
-
