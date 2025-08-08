@@ -3,15 +3,18 @@ import React from 'react';
 import {
   Alert,
   Platform,
+  Pressable,
   SafeAreaView,
+  StyleSheet,
   Text,
   TextInput,
   View,
-  Pressable,
-  StyleSheet,
 } from 'react-native';
 import { useUsers } from 'shared-store';
 import { useUsersForm } from '../hooks/useUsersForm';
+import { Field } from '../components/Field';
+import { RoleSelector } from '../components/RoleSelector';
+import { Button } from '../components/Button';
 
 type NavProp = {
   goBack: () => void;
@@ -51,47 +54,29 @@ export function UserFormScreen({
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>
-          {isEdit ? 'Edit user' : 'Create user'}
-        </Text>
-        <TextInput
+        <Text style={styles.title}>{isEdit ? 'Edit user' : 'Create user'}</Text>
+        <Field
+          label="Full Name"
           placeholder="Full Name"
-          value={form.watch('fullName')}
+          value={form.watch('fullName') as string}
           onChangeText={(t) =>
             form.setValue('fullName', t, { shouldValidate: true })
           }
-          style={[
-            styles.input,
-            form.formState.errors.fullName && styles.inputError,
-          ]}
+          error={
+            form.formState.errors.fullName
+              ? String(form.formState.errors.fullName.message)
+              : undefined
+          }
         />
-        {form.formState.errors.fullName && (
-          <Text style={styles.errorText}>
-            {String(form.formState.errors.fullName.message)}
-          </Text>
-        )}
-        <View style={styles.roleRow}>
-          {(['STAFF', 'MEMBER'] as const).map((r) => (
-            <Pressable
-              key={r}
-              onPress={() => form.setValue('role', r, { shouldValidate: true })}
-              style={({ pressed }) => [
-                styles.roleButton,
-                form.watch('role') === r
-                  ? styles.roleButtonActive
-                  : styles.roleButtonInactive,
-                pressed && styles.pressed,
-              ]}
-            >
-              <Text>{r}</Text>
-            </Pressable>
-          ))}
-        </View>
-        {form.formState.errors.role && (
-          <Text style={styles.errorText}>
-            {String(form.formState.errors.role.message)}
-          </Text>
-        )}
+        <RoleSelector
+          value={form.watch('role') as 'STAFF' | 'MEMBER'}
+          onChange={(r) => form.setValue('role', r, { shouldValidate: true })}
+          error={
+            form.formState.errors.role
+              ? String(form.formState.errors.role.message)
+              : undefined
+          }
+        />
         <Pressable
           onPress={() => setShowPicker(true)}
           style={({ pressed }) => [
@@ -133,30 +118,13 @@ export function UserFormScreen({
             }}
           />
         )}
-        <Pressable
+        <Button
+          title={isEdit ? 'Save' : 'Create'}
           onPress={onSubmit}
-          style={({ pressed }) => [
-            styles.buttonPrimary,
-            pressed && styles.buttonPrimaryPressed,
-          ]}
           disabled={!form.formState.isValid}
-        >
-          <Text style={styles.buttonPrimaryText}>
-            {isEdit ? 'Save' : 'Create'}
-          </Text>
-        </Pressable>
+        />
         {isEdit && (
-          <Pressable
-            onPress={onRemove}
-            style={({ pressed }) => [
-              styles.buttonDanger,
-              pressed && styles.buttonDangerPressed,
-            ]}
-          >
-            <Text style={styles.buttonDangerText}>
-              Remove User
-            </Text>
-          </Pressable>
+          <Button title="Remove User" onPress={onRemove} variant="danger" />
         )}
       </View>
     </SafeAreaView>
@@ -193,10 +161,20 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   dateButtonText: { color: '#111827' },
-  buttonPrimary: { padding: 12, backgroundColor: '#111827', borderRadius: 8, marginTop: 12 },
+  buttonPrimary: {
+    padding: 12,
+    backgroundColor: '#111827',
+    borderRadius: 8,
+    marginTop: 12,
+  },
   buttonPrimaryPressed: { opacity: 0.8 },
   buttonPrimaryText: { color: 'white', textAlign: 'center' },
-  buttonDanger: { padding: 12, backgroundColor: '#ef4444', borderRadius: 8, marginTop: 8 },
+  buttonDanger: {
+    padding: 12,
+    backgroundColor: '#ef4444',
+    borderRadius: 8,
+    marginTop: 8,
+  },
   buttonDangerPressed: { opacity: 0.85 },
   buttonDangerText: { color: 'white', textAlign: 'center' },
 });
