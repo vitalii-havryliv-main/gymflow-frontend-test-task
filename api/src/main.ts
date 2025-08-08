@@ -31,7 +31,23 @@ const dbPromise = JSONFilePreset('api/db.json', defaultData);
 const app = Fastify({ logger: true });
 // Bootstrap server without top-level await (for TS config compatibility)
 async function bootstrap() {
-  await app.register(cors, { origin: true });
+  await app.register(cors, {
+    origin: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    hook: 'preHandler',
+    strictPreflight: false,
+  });
+
+  // Fallback preflight handlers (some envs require explicit OPTIONS routes)
+  app.options('/users', async (_req, reply) => {
+    reply.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    reply.send();
+  });
+  app.options('/users/:id', async (_req, reply) => {
+    reply.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    reply.send();
+  });
 
   app.get('/health', async () => ({ ok: true }));
 
