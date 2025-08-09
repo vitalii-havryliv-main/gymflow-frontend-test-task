@@ -52,3 +52,9 @@ Notes
   - `pnpm --filter mobile exec expo start`
   - `pnpm --filter mobile exec expo start --ios`
   - `pnpm --filter mobile exec expo start --android`
+
+5. Run tests
+
+```bash
+pnpm test
+```
