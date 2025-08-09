@@ -34,7 +34,7 @@ export function RoleSelector({ value, onChange, error }: Props) {
           </Pressable>
         ))}
       </View>
-      {!!error && <Text style={styles.errorText}>{error}</Text>}
+      {!!error && <Text style={{ color: theme.colors.danger }}>{error}</Text>}
     </View>
   );
 }
@@ -49,5 +49,4 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   pressed: { opacity: 0.7 },
-  errorText: { color: '#ef4444' },
 });

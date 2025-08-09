@@ -34,11 +34,15 @@ export function Field({
             color: theme.colors.textPrimary,
             backgroundColor: theme.colors.surface,
           },
-          error && styles.inputError,
+          error && { borderColor: theme.colors.danger },
         ]}
         placeholderTextColor={theme.colors.textSecondary}
       />
-      {!!error && <Text style={styles.errorText}>{error}</Text>}
+      {!!error && (
+        <Text style={[styles.errorText, { color: theme.colors.danger }]}>
+          {error}
+        </Text>
+      )}
     </View>
   );
 }
@@ -56,6 +60,5 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
   },
-  inputError: { borderColor: '#ef4444' },
-  errorText: { color: '#ef4444', marginTop: 2 },
+  errorText: { marginTop: 2 },
 });

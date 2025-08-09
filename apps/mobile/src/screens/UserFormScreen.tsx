@@ -91,13 +91,13 @@ export function UserFormScreen({
               borderColor: theme.colors.border,
               backgroundColor: theme.colors.surface,
             },
-            form.formState.errors.dateOfBirth ? styles.inputError : null,
+            form.formState.errors.dateOfBirth
+              ? { borderColor: theme.colors.danger }
+              : null,
             pressed && styles.pressed,
           ]}
         >
-          <Text
-            style={[styles.dateButtonText, { color: theme.colors.textPrimary }]}
-          >
+          <Text style={{ color: theme.colors.textPrimary }}>
             {form.watch('dateOfBirth')
               ? DateTime.fromISO(form.watch('dateOfBirth') as string)
                   .toUTC()
@@ -120,7 +120,8 @@ export function UserFormScreen({
               if (d)
                 form.setValue(
                   'dateOfBirth',
-                  DateTime.fromJSDate(d).startOf('day').toUTC().toISO(),
+                  DateTime.fromJSDate(d).startOf('day').toUTC().toISO() ??
+                    undefined,
                   { shouldValidate: true }
                 );
             }}
@@ -130,14 +131,17 @@ export function UserFormScreen({
           title={isEdit ? 'Save' : 'Create'}
           onPress={onSubmit}
           disabled={!form.formState.isValid}
-          style={styles.createButton}
+          style={[
+            styles.createButton,
+            { backgroundColor: theme.colors.primary },
+          ]}
         />
         {isEdit && (
           <Button
             title="Remove User"
             onPress={onRemove}
             variant="danger"
-            style={styles.removeButton}
+            style={[styles.removeButton, { borderColor: theme.colors.danger }]}
           />
         )}
       </View>
@@ -149,14 +153,6 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   content: { padding: 16 },
   title: { fontSize: 20, fontWeight: '700', marginBottom: 12 },
-  input: {
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
-    borderRadius: 8,
-    padding: 10,
-  },
-  inputError: { borderColor: '#ef4444' },
-  errorText: { color: '#ef4444', marginTop: 4 },
   roleRow: { flexDirection: 'row', marginTop: 8 },
   roleButton: {
     padding: 10,
@@ -164,8 +160,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginRight: 8,
   },
-  roleButtonActive: { borderColor: '#111827' },
-  roleButtonInactive: { borderColor: '#e5e7eb' },
   pressed: { opacity: 0.7 },
   dateButton: {
     borderWidth: 1,
@@ -174,10 +168,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     marginTop: 8,
   },
-  dateButtonText: { color: '#111827' },
   buttonPrimary: {
     padding: 12,
-    backgroundColor: '#111827',
     borderRadius: 8,
     marginTop: 12,
   },
@@ -185,7 +177,6 @@ const styles = StyleSheet.create({
   buttonPrimaryText: { color: 'white', textAlign: 'center' },
   buttonDanger: {
     padding: 12,
-    backgroundColor: '#ef4444',
     borderRadius: 8,
     marginTop: 8,
   },
