@@ -1,4 +1,5 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { DateTime } from 'luxon';
 import React from 'react';
 import {
   Alert,
@@ -98,8 +99,10 @@ export function UserFormScreen({
             style={[styles.dateButtonText, { color: theme.colors.textPrimary }]}
           >
             {form.watch('dateOfBirth')
-              ? (form.watch('dateOfBirth') as string).slice(0, 10)
-              : 'Date of Birthday'}
+              ? DateTime.fromISO(form.watch('dateOfBirth') as string)
+                  .toUTC()
+                  .toFormat('yyyy-LL-dd')
+              : 'Date of Birth'}
           </Text>
         </Pressable>
         {showPicker && (
@@ -117,14 +120,7 @@ export function UserFormScreen({
               if (d)
                 form.setValue(
                   'dateOfBirth',
-                  `${d.getFullYear().toString().padStart(4, '0')}-${(
-                    d.getMonth() + 1
-                  )
-                    .toString()
-                    .padStart(2, '0')}-${d
-                    .getDate()
-                    .toString()
-                    .padStart(2, '0')}T00:00:00.000Z`,
+                  DateTime.fromJSDate(d).startOf('day').toUTC().toISO(),
                   { shouldValidate: true }
                 );
             }}
