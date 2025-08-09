@@ -116,10 +116,16 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggle}
-      className="rounded-full border px-2.5 py-1 text-lg border-[var(--border)] bg-[var(--surface)] text-[var(--text-primary)]"
+      className="rounded-full hover:scale-115 border px-2.5 py-1 text-lg border-[var(--border)] bg-[var(--surface)] text-[var(--text-primary)] will-change-transform transition-transform duration-200 active:scale-95"
       aria-label="Toggle theme"
     >
-      {icon}
+      <span
+        className={`inline-block transition-transform duration-300  ${
+          mode === 'dark' ? 'rotate-0' : 'rotate-180'
+        }`}
+      >
+        {icon}
+      </span>
     </button>
   );
 }
