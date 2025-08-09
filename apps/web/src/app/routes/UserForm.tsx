@@ -2,6 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useUsersForm } from 'shared-hooks';
 import { useUsers } from 'shared-store';
 import { LabeledField } from '../components/LabeledField';
+import ChevronDown from '../components/icons/ChevronDown';
 
 export default function UserFormRoute() {
   const params = useParams();
@@ -24,12 +25,15 @@ export default function UserFormRoute() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl p-10 mt-10">
-      <div className="rounded-2xl p-8 shadow-sm border bg-[var(--surface)] border-[var(--border)]">
-        <h2 className="mb-4 text-2xl font-semibold">
+    <div className="mx-auto w-full max-w-3xl min-h-screen md:my-20 sm:my-0 text-[var(--text-primary)] overflow-hidden">
+      <div className="my-6 sm:my-8 md:my-10 h-full flex flex-col bg-transparent p-4 sm:p-6 md:p-8 md:rounded-2xl md:border md:border-[var(--border)] md:bg-[var(--surface)] overflow-hidden">
+        <h2 className="mb-4 text-2xl font-semibold shrink-0">
           {isEdit ? 'Edit user' : 'Create user'}
         </h2>
-        <form onSubmit={onSubmit} className="grid gap-4">
+        <form
+          onSubmit={onSubmit}
+          className="grid gap-4 min-h-0 flex-1 overflow-y-auto pr-1"
+        >
           <LabeledField
             label="Full Name"
             error={
@@ -65,24 +69,7 @@ export default function UserFormRoute() {
                 <option value="STAFF">Staff</option>
                 <option value="MEMBER">Member</option>
               </select>
-              <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M6 9l6 6 6-6"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </span>
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" />
             </div>
           </LabeledField>
 
