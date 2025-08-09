@@ -1,3 +1,5 @@
+// keep framer-motion import minimal, but we'll remove hover scale per feedback
+import { AnimatePresence, motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import type { User } from 'shared-types';
 
@@ -19,23 +21,26 @@ export function UserTable({ users }: { users: User[] }) {
     );
   }
   return (
-    <div className="grid gap-3">
-      {users.map((u) => (
-        <button
-          key={u.id}
-          onClick={() => navigate(`/users/${u.id}`)}
-          className="w-full rounded-xl border p-4 text-left shadow-sm transition hover:shadow-md border-[var(--border)] bg-[var(--surface)]"
-        >
-          <div className="flex items-center justify-between">
-            <div className="font-semibold text-[var(--text-primary)]">
-              {u.fullName}
+    <div className="grid gap-3 pt-2">
+      <AnimatePresence initial={false}>
+        {users.map((u) => (
+          <motion.button
+            key={u.id}
+            layout
+            onClick={() => navigate(`/users/${u.id}`)}
+            className="w-full rounded-xl border p-4 text-left shadow-sm border-[var(--border)] bg-[var(--surface)] transition duration-150 hover:shadow-md hover:-translate-y-[1px]"
+          >
+            <div className="flex items-center justify-between">
+              <div className="font-semibold text-[var(--text-primary)]">
+                {u.fullName}
+              </div>
+              <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold border-[var(--border)] bg-[var(--chip-bg)] text-[var(--text-primary)]">
+                {u.role}
+              </span>
             </div>
-            <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold border-[var(--border)] bg-[var(--chip-bg)] text-[var(--text-primary)]">
-              {u.role}
-            </span>
-          </div>
-        </button>
-      ))}
+          </motion.button>
+        ))}
+      </AnimatePresence>
     </div>
   );
 }
