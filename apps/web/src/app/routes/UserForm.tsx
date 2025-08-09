@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useUsersForm } from 'shared-hooks';
 import { useUsers } from 'shared-store';
 import { LabeledField } from '../components/LabeledField';
-import ChevronDown from '../components/icons/ChevronDown';
+import RoleSelect from '../components/RoleSelect';
 
 export default function UserFormRoute() {
   const params = useParams();
@@ -56,21 +56,13 @@ export default function UserFormRoute() {
             label="Role"
             error={form.formState.errors.role?.message as string | undefined}
           >
-            <div className="relative">
-              <select
-                className={`appearance-none rounded-md border pl-3 pr-10 py-2 w-full text-[var(--text-primary)] bg-[var(--surface)] outline-none focus:ring-2 focus:ring-[var(--primary)] ${
-                  form.formState.errors.role
-                    ? 'border-[var(--danger)]'
-                    : 'border-[var(--border)]'
-                }`}
-                {...form.register('role')}
-                aria-invalid={!!form.formState.errors.role}
-              >
-                <option value="STAFF">Staff</option>
-                <option value="MEMBER">Member</option>
-              </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" />
-            </div>
+            <RoleSelect
+              value={form.watch('role') as 'STAFF' | 'MEMBER'}
+              onChange={(r) =>
+                form.setValue('role', r, { shouldValidate: true })
+              }
+              hasError={!!form.formState.errors.role}
+            />
           </LabeledField>
 
           <LabeledField
