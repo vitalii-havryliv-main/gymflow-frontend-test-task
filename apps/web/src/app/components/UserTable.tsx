@@ -1,47 +1,41 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import type { User } from 'shared-types';
 
 export function UserTable({ users }: { users: User[] }) {
+  const navigate = useNavigate();
+  if (users.length === 0) {
+    return (
+      <div className="rounded-xl border border-dashed p-10 text-center border-[var(--border)] bg-[var(--surface)]">
+        <p className="mt-1 text-sm text-[var(--text-secondary)]">
+          Get started by adding your first user.
+        </p>
+        <Link
+          to="/users/new"
+          className="mt-4 inline-block rounded-md px-4 py-2 shadow hover:opacity-90 bg-[var(--primary)] text-[var(--button-text)]"
+        >
+          Add your first user
+        </Link>
+      </div>
+    );
+  }
   return (
-    <div className="overflow-hidden rounded-xl bg-white shadow ring-1 ring-black/5">
-      <table className="min-w-full divide-y divide-slate-200">
-        <thead className="sticky top-0 bg-slate-50/80 backdrop-blur supports-[backdrop-filter]:bg-slate-50/60">
-          <tr>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">
-              Full name
-            </th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-slate-700">
-              Role
-            </th>
-            <th className="px-6 py-3 text-right text-sm font-semibold text-slate-700">
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-slate-100">
-          {users.map((u) => (
-            <tr
-              key={u.id}
-              className="even:bg-slate-50 hover:bg-slate-100/60 transition-colors"
-            >
-              <td className="px-6 py-4 text-sm text-slate-900">{u.fullName}</td>
-              <td className="px-6 py-4 text-sm text-slate-700">
-                <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700">
-                  {u.role}
-                </span>
-              </td>
-              <td className="px-6 py-4 text-right">
-                <Link
-                  to={`/users/${u.id}`}
-                  className="text-sm font-medium text-blue-600 hover:text-blue-800"
-                >
-                  Edit
-                </Link>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="grid gap-3 max-h-[60vh] lg:max-h-[70vh] overflow-y-auto pr-2 pb-2">
+      {users.map((u) => (
+        <button
+          key={u.id}
+          onClick={() => navigate(`/users/${u.id}`)}
+          className="w-full rounded-xl border p-4 text-left shadow-sm transition hover:shadow-md border-[var(--border)] bg-[var(--surface)]"
+        >
+          <div className="flex items-center justify-between">
+            <div className="font-semibold text-[var(--text-primary)]">
+              {u.fullName}
+            </div>
+            <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold border-[var(--border)] bg-[var(--chip-bg)] text-[var(--text-primary)]">
+              {u.role}
+            </span>
+          </div>
+        </button>
+      ))}
     </div>
   );
 }
