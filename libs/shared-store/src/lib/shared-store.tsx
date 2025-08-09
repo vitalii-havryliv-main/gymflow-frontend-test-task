@@ -144,6 +144,65 @@ export function UsersProvider({
     })();
   }, [persistence, apiBaseUrl]);
 
+  // SSE subscription + revalidate on focus/online (web) or foreground (RN)
+  useEffect(() => {
+    if (!apiBaseUrl) return;
+    const rehydrate = async () => {
+      try {
+        const res = await fetch(`${apiBaseUrl}/users`);
+        const data = (await res.json()) as User[];
+        dispatch({ type: 'HYDRATE', payload: data });
+      } catch {}
+    };
+
+    // SSE (web only or envs with EventSource polyfill)
+    let es: any;
+    if (typeof (globalThis as any).EventSource === 'function') {
+      try {
+        es = new (globalThis as any).EventSource(`${apiBaseUrl}/events`);
+        es.addEventListener?.('users-updated', rehydrate);
+      } catch {
+        // ignore
+      }
+    }
+
+    // Web focus/online
+    const hasWindow = typeof window !== 'undefined';
+    const canAddWinListener =
+      hasWindow && typeof (window as any).addEventListener === 'function';
+    const onFocus = () => void rehydrate();
+    const onOnline = () => void rehydrate();
+    if (canAddWinListener) {
+      window.addEventListener('focus', onFocus);
+      window.addEventListener('online', onOnline);
+    }
+
+    // React Native AppState foreground revalidate (guarded require)
+    let rnSub: any;
+    if (
+      !canAddWinListener &&
+      (globalThis as any).navigator?.product === 'ReactNative'
+    ) {
+      try {
+        const { AppState } = require('react-native');
+        rnSub = AppState.addEventListener('change', (state: string) => {
+          if (state === 'active') void rehydrate();
+        });
+      } catch {
+        // ignore if not available
+      }
+    }
+
+    return () => {
+      if (es?.close) es.close();
+      if (canAddWinListener) {
+        window.removeEventListener('focus', onFocus);
+        window.removeEventListener('online', onOnline);
+      }
+      if (rnSub?.remove) rnSub.remove();
+    };
+  }, [apiBaseUrl]);
+
   useEffect(() => {
     if (!apiBaseUrl && state.isHydrated) void persistence.save(state.users);
   }, [state.users, state.isHydrated, persistence, apiBaseUrl]);
