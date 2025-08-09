@@ -50,3 +50,9 @@ nx.bat
 
 # Nx temporary build artifacts
 tmp/
+
+# Local runtime data (API DB lives here by default)
+.data/
+
+# Legacy DB file (no longer used)
+api/db.json
