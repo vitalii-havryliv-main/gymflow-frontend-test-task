@@ -24,8 +24,8 @@ export default function UserFormRoute() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl p-6">
-      <div className="rounded-lg bg-white p-6 shadow ring-1 ring-black/5">
+    <div className="mx-auto max-w-2xl p-10 mt-10">
+      <div className="rounded-2xl p-8 shadow-sm border bg-[var(--surface)] border-[var(--border)]">
         <h2 className="mb-4 text-2xl font-semibold">
           {isEdit ? 'Edit user' : 'Create user'}
         </h2>
@@ -37,10 +37,10 @@ export default function UserFormRoute() {
             }
           >
             <input
-              className={`rounded-md border px-3 py-2 ${
+              className={`rounded-md border px-3 py-2 w-full text-[var(--text-primary)] bg-[var(--surface)] outline-none focus:ring-2 focus:ring-[var(--primary)] ${
                 form.formState.errors.fullName
-                  ? 'border-red-500'
-                  : 'border-gray-300'
+                  ? 'border-[var(--danger)]'
+                  : 'border-[var(--border)]'
               }`}
               placeholder="e.g. John Smith"
               {...form.register('fullName')}
@@ -52,18 +52,38 @@ export default function UserFormRoute() {
             label="Role"
             error={form.formState.errors.role?.message as string | undefined}
           >
-            <select
-              className={`rounded-md border px-3 py-2 ${
-                form.formState.errors.role
-                  ? 'border-red-500'
-                  : 'border-gray-300'
-              }`}
-              {...form.register('role')}
-              aria-invalid={!!form.formState.errors.role}
-            >
-              <option value="STAFF">Staff</option>
-              <option value="MEMBER">Member</option>
-            </select>
+            <div className="relative">
+              <select
+                className={`appearance-none rounded-md border pl-3 pr-10 py-2 w-full text-[var(--text-primary)] bg-[var(--surface)] outline-none focus:ring-2 focus:ring-[var(--primary)] ${
+                  form.formState.errors.role
+                    ? 'border-[var(--danger)]'
+                    : 'border-[var(--border)]'
+                }`}
+                {...form.register('role')}
+                aria-invalid={!!form.formState.errors.role}
+              >
+                <option value="STAFF">Staff</option>
+                <option value="MEMBER">Member</option>
+              </select>
+              <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M6 9l6 6 6-6"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+            </div>
           </LabeledField>
 
           <LabeledField
@@ -74,10 +94,10 @@ export default function UserFormRoute() {
           >
             <input
               type="date"
-              className={`rounded-md border px-3 py-2 ${
+              className={`date-input rounded-md border px-3 py-2 w-full text-[var(--text-primary)] bg-[var(--surface)] outline-none focus:ring-2 focus:ring-[var(--primary)] [color-scheme:dark] dark:[color-scheme:light] ${
                 form.formState.errors.dateOfBirth
-                  ? 'border-red-500'
-                  : 'border-gray-300'
+                  ? 'border-[var(--danger)]'
+                  : 'border-[var(--border)]'
               }`}
               value={form.watch('dateOfBirth')?.slice(0, 10) ?? ''}
               onChange={(e) => {
@@ -96,10 +116,8 @@ export default function UserFormRoute() {
             <button
               type="submit"
               disabled={!form.formState.isValid}
-              className={`rounded-md px-4 py-2 text-white ${
-                form.formState.isValid
-                  ? 'bg-blue-600 hover:bg-blue-700'
-                  : 'bg-blue-400'
+              className={`rounded-md px-4 py-2 bg-[var(--primary)] text-[var(--button-text)] ${
+                form.formState.isValid ? '' : 'opacity-60'
               }`}
             >
               {isEdit ? 'Save' : 'Create'}
@@ -108,7 +126,7 @@ export default function UserFormRoute() {
               <button
                 type="button"
                 onClick={onRemove}
-                className="rounded-md border border-gray-300 px-4 py-2 hover:bg-gray-50"
+                className="rounded-md border px-4 py-2 border-[var(--border)]"
               >
                 Remove User
               </button>

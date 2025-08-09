@@ -1,3 +1,11 @@
 @import 'tailwindcss';
 @source "./**/*.{html,ts,tsx}";
 @source "../../libs/**/*.{ts,tsx}";
+
+/* Ensure native date input icon matches theme */
+input.date-input::-webkit-calendar-picker-indicator {
+  filter: var(--icon-filter, none);
+}
+input.date-input::-moz-calendar-picker-indicator {
+  filter: var(--icon-filter, none);
+}

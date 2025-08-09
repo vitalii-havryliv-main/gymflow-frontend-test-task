@@ -7,9 +7,14 @@ export function LabeledField({
 }: React.PropsWithChildren<{ label: string; error?: string }>) {
   return (
     <label className="grid gap-2">
-      <span className="text-sm font-medium text-gray-700">{label}</span>
+      <span
+        className="text-sm font-medium"
+        style={{ color: 'var(--text-secondary)' }}
+      >
+        {label}
+      </span>
       {children}
-      {error && <small className="text-sm text-red-600">{error}</small>}
+      {error && <small className="text-sm text-[var(--danger)]">{error}</small>}
     </label>
   );
 }
