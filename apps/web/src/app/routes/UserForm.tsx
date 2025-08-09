@@ -103,7 +103,7 @@ export default function UserFormRoute() {
             <button
               type="submit"
               disabled={!form.formState.isValid}
-              className={`rounded-md px-4 hover:scale-[1.02] transition-transform duration-150 py-2 bg-[var(--primary)] text-[var(--button-text)] ${
+              className={`rounded-2xl px-4 hover:scale-[1.02] transition-transform duration-150 py-2 bg-[var(--primary)] text-[var(--button-text)] ${
                 form.formState.isValid ? '' : 'opacity-60'
               }`}
             >
@@ -113,7 +113,7 @@ export default function UserFormRoute() {
               <button
                 type="button"
                 onClick={onRemove}
-                className="rounded-md border px-4 hover:scale-[1.02] bg-[var(--danger)] text-[var(--button-text)] transition-transform duration-150 py-2 border-[var(--border)]"
+                className="rounded-2xl border px-4 hover:scale-[1.02] bg-[var(--danger)] text-[var(--button-text)] transition-transform duration-150 py-2 border-[var(--border)]"
               >
                 Remove User
               </button>

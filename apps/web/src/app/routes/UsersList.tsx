@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useUsers } from 'shared-store';
-import { UserTable } from '../components/UserTable';
 import ThemeToggle from '../components/ThemeToggle';
+import { UserTable } from '../components/UserTable';
 
 export default function UsersList() {
   const { users } = useUsers();
@@ -24,7 +24,7 @@ export default function UsersList() {
           <div className="mb-6 shrink-0">
             <Link
               to="/users/new"
-              className="inline-block rounded-lg px-5 py-2.5 shadow hover:opacity-90 bg-[var(--primary)] text-[var(--button-text)] hover:scale-[1.02] transition-transform duration-150"
+              className="inline-block rounded-2xl px-5 py-2.5 shadow hover:opacity-90 bg-[var(--primary)] text-[var(--button-text)] hover:scale-[1.02] transition-transform duration-150 font-semibold"
             >
               Add user
             </Link>
