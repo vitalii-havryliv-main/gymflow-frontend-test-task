@@ -45,7 +45,12 @@ export function Field({
 
 const styles = StyleSheet.create({
   container: { marginBottom: 12 },
-  label: { fontSize: 14, marginBottom: 6 },
+  label: {
+    fontSize: 14,
+    marginBottom: 6,
+    fontWeight: '600',
+    marginLeft: 4,
+  },
   input: {
     borderWidth: 1,
     borderRadius: 8,

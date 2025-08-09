@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
+import { useUsersForm } from 'shared-hooks';
 import { useUsers } from 'shared-store';
 import { LabeledField } from '../components/LabeledField';
-import { useUsersForm } from '../hooks/useUsersForm';
 
 export default function UserFormRoute() {
   const params = useParams();

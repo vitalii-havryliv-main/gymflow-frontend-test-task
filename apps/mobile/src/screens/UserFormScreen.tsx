@@ -9,11 +9,11 @@ import {
   Text,
   View,
 } from 'react-native';
+import { useUsersForm } from 'shared-hooks';
 import { useUsers } from 'shared-store';
 import { Button } from '../components/Button';
 import { Field } from '../components/Field';
 import { RoleSelector } from '../components/RoleSelector';
-import { useUsersForm } from '../hooks/useUsersForm';
 import { useTheme } from '../theme';
 
 type NavProp = {
@@ -62,7 +62,7 @@ export function UserFormScreen({
         </Text>
         <Field
           label="Full Name"
-          placeholder="Full Name"
+          placeholder="e.g. John Smith"
           value={form.watch('fullName') as string}
           onChangeText={(t) =>
             form.setValue('fullName', t, { shouldValidate: true })
@@ -99,7 +99,7 @@ export function UserFormScreen({
           >
             {form.watch('dateOfBirth')
               ? (form.watch('dateOfBirth') as string).slice(0, 10)
-              : 'Tap to pick date'}
+              : 'Date of Birthday'}
           </Text>
         </Pressable>
         {showPicker && (

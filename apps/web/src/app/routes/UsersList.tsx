@@ -9,7 +9,9 @@ export default function UsersList() {
     <div className="mx-auto max-w-6xl p-8">
       <div className="mb-6 flex items-center justify-between gap-4">
         <div className="flex flex-col">
-          <h1 className="text-4xl font-bold tracking-tight">Users</h1>
+          <h1 className="text-4xl font-bold tracking-tight">
+            Welcome to Gymflow!
+          </h1>
           <p className="mt-1 text-sm text-slate-500">
             Manage all members and staff.
           </p>

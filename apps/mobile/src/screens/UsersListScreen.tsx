@@ -20,8 +20,16 @@ export function UsersListScreen({ navigation }: { navigation: NavProp }) {
     >
       <View style={styles.content}>
         <Text style={[styles.title, { color: theme.colors.textPrimary }]}>
-          Users
+          Welcome to Gymflow!
         </Text>
+        <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
+          Manage all members and staff.
+        </Text>
+        <Button
+          title="Create user"
+          onPress={() => navigation.navigate('UserForm')}
+          style={styles.createButton}
+        />
         {users.map((u) => (
           <Animated.View key={u.id} entering={FadeIn}>
             <Pressable
@@ -46,10 +54,6 @@ export function UsersListScreen({ navigation }: { navigation: NavProp }) {
             </Pressable>
           </Animated.View>
         ))}
-        <Button
-          title="Create user"
-          onPress={() => navigation.navigate('UserForm')}
-        />
       </View>
     </SafeAreaView>
   );
@@ -59,6 +63,7 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   content: { padding: 16 },
   title: { fontSize: 24, fontWeight: '800', marginBottom: 12 },
+  subtitle: { fontSize: 14, marginBottom: 12 },
   listItem: {
     paddingVertical: 12,
     paddingHorizontal: 14,
@@ -73,7 +78,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   pressed: { opacity: 0.7 },
-  buttonPrimary: {},
-  buttonPrimaryPressed: {},
-  buttonPrimaryText: {},
+  createButton: {
+    marginBottom: 12,
+  },
 });
