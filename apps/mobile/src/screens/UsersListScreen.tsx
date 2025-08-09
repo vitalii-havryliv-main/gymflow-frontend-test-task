@@ -1,5 +1,13 @@
 import React from 'react';
-import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useUsers } from 'shared-store';
 import { Badge } from '../components/Badge';
@@ -11,7 +19,7 @@ type NavProp = {
 };
 
 export function UsersListScreen({ navigation }: { navigation: NavProp }) {
-  const { users } = useUsers();
+  const { users, isHydrated } = useUsers();
   const { theme } = useTheme();
 
   return (
@@ -25,35 +33,69 @@ export function UsersListScreen({ navigation }: { navigation: NavProp }) {
         <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
           Manage all members and staff.
         </Text>
-        <Button
-          title="Create user"
-          onPress={() => navigation.navigate('UserForm')}
-          style={styles.createButton}
-        />
-        {users.map((u) => (
-          <Animated.View key={u.id} entering={FadeIn}>
-            <Pressable
-              onPress={() => navigation.navigate('UserForm', { id: u.id })}
-              style={({ pressed }) => [
-                styles.listItem,
-                {
-                  borderColor: theme.colors.border,
-                  backgroundColor: theme.colors.surface,
-                },
-                pressed && styles.pressed,
-              ]}
+        {users.length > 0 && (
+          <Button
+            title="Add user"
+            onPress={() => navigation.navigate('UserForm')}
+            style={styles.createButton}
+            textStyle={styles.createButtonText}
+          />
+        )}
+
+        {!isHydrated ? (
+          <View style={{ paddingVertical: 24 }}>
+            <ActivityIndicator
+              size="small"
+              color={theme.colors.textSecondary}
+            />
+          </View>
+        ) : users.length === 0 ? (
+          <View style={styles.emptyState}>
+            <Text
+              style={{ color: theme.colors.textSecondary, marginBottom: 12 }}
             >
-              <View style={styles.rowBetween}>
-                <Text
-                  style={[styles.name, { color: theme.colors.textPrimary }]}
+              Get started by adding your first user.
+            </Text>
+            <Button
+              title="Add user"
+              onPress={() => navigation.navigate('UserForm')}
+              style={styles.addButton}
+            />
+          </View>
+        ) : null}
+
+        {isHydrated && (
+          <FlatList
+            data={users}
+            keyExtractor={(item) => item.id}
+            ItemSeparatorComponent={() => <View style={{ height: 1 }} />}
+            contentContainerStyle={{ paddingBottom: 16, height: '100%' }}
+            renderItem={({ item: u }) => (
+              <Animated.View entering={FadeIn}>
+                <Pressable
+                  onPress={() => navigation.navigate('UserForm', { id: u.id })}
+                  style={({ pressed }) => [
+                    styles.listItem,
+                    {
+                      borderColor: theme.colors.border,
+                      backgroundColor: theme.colors.surface,
+                    },
+                    pressed && styles.pressed,
+                  ]}
                 >
-                  {u.fullName}
-                </Text>
-                <Badge label={u.role} />
-              </View>
-            </Pressable>
-          </Animated.View>
-        ))}
+                  <View style={styles.rowBetween}>
+                    <Text
+                      style={[styles.name, { color: theme.colors.textPrimary }]}
+                    >
+                      {u.fullName}
+                    </Text>
+                    <Badge label={u.role} />
+                  </View>
+                </Pressable>
+              </Animated.View>
+            )}
+          />
+        )}
       </View>
     </SafeAreaView>
   );
@@ -80,5 +122,25 @@ const styles = StyleSheet.create({
   pressed: { opacity: 0.7 },
   createButton: {
     marginBottom: 12,
+    width: '100%',
+    alignSelf: 'center',
+    alignItems: 'center',
+    borderRadius: 16,
+  },
+  createButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  emptyState: {
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderRadius: 12,
+    padding: 16,
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  addButton: {
+    paddingHorizontal: 16,
+    borderRadius: 14,
   },
 });
