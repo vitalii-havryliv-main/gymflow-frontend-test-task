@@ -4,6 +4,7 @@ import {
   StyleProp,
   StyleSheet,
   Text,
+  TextStyle,
   ViewStyle,
 } from 'react-native';
 import { useTheme } from '../theme';
@@ -16,6 +17,7 @@ type ButtonProps = {
   variant?: ButtonVariant;
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
 };
 
 export function Button({
@@ -24,6 +26,7 @@ export function Button({
   variant = 'primary',
   disabled,
   style,
+  textStyle,
 }: ButtonProps) {
   const { theme } = useTheme();
   return (
@@ -51,6 +54,7 @@ export function Button({
                 ? '#000000'
                 : '#ffffff',
           },
+          textStyle,
         ]}
       >
         {title}
