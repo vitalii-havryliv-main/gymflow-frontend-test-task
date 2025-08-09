@@ -1,6 +1,8 @@
 import cors from '@fastify/cors';
 import Fastify from 'fastify';
+import { mkdirSync } from 'fs';
 import { JSONFilePreset } from 'lowdb/node';
+import * as path from 'path';
 import { z } from 'zod';
 
 // Types
@@ -25,7 +27,15 @@ const updateUserSchema = createUserSchema.partial();
 
 // DB
 const defaultData = { users: [] as User[] };
-const dbPromise = JSONFilePreset('api/db.json', defaultData);
+// Resolve DB location to a writable, non-repo path by default
+const dataDir = process.env.API_DATA_DIR ?? path.join(process.cwd(), '.data');
+try {
+  mkdirSync(dataDir, { recursive: true });
+} catch {
+  // ignore mkdir errors; lowdb will attempt to create the file on write
+}
+const dbFile = process.env.API_DB_FILE ?? path.join(dataDir, 'api-db.json');
+const dbPromise = JSONFilePreset(dbFile, defaultData);
 
 // Server
 const app = Fastify({ logger: true });
