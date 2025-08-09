@@ -45,18 +45,7 @@ export function Button({
         style,
       ]}
     >
-      <Text
-        style={[
-          styles.text,
-          {
-            color:
-              theme.mode === 'dark' && variant === 'primary'
-                ? '#000000'
-                : '#ffffff',
-          },
-          textStyle,
-        ]}
-      >
+      <Text style={[styles.text, { color: theme.colors.surface }, textStyle]}>
         {title}
       </Text>
     </Pressable>
@@ -72,5 +61,5 @@ const styles = StyleSheet.create({
   },
   pressed: { opacity: 0.85 },
   disabled: { opacity: 0.5 },
-  text: { textAlign: 'center' },
+  text: { textAlign: 'center', fontWeight: '600' },
 });
