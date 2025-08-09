@@ -7,7 +7,7 @@ import { ThemeToggle } from '../theme';
 export default function UsersList() {
   const { users } = useUsers();
   return (
-    <div className="mx-auto md:my-20 sm:my-0 w-full h-full max-w-3xl min-h-screen text-[var(--text-primary)] overflow-hidden">
+    <div className="mx-auto shadow-md md:my-20 sm:my-0 w-full h-full max-w-3xl min-h-screen text-[var(--text-primary)] overflow-hidden">
       <div className="sm:my-0 md:my-10 h-full sm:min-h-[100dvh] sm:max-h-[100dvh] md:min-h-0 md:max-h-[calc(100dvh-15rem)] flex flex-col bg-transparent p-4 sm:p-6 md:p-8 md:rounded-2xl md:border md:border-[var(--border)] md:bg-[var(--surface)] overflow-hidden">
         <div className="mb-6 flex items-center justify-between gap-4">
           <div className="flex flex-col">
