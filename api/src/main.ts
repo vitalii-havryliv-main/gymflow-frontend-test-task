@@ -3,7 +3,8 @@ import Fastify from 'fastify';
 import { mkdirSync } from 'fs';
 import { JSONFilePreset } from 'lowdb/node';
 import * as path from 'path';
-import { z } from 'zod';
+import { generateId, nowIso } from 'shared-utils';
+import { createUserSchema, updateUserSchema } from 'shared-validation';
 
 // Types
 type UserRole = 'STAFF' | 'MEMBER';
@@ -16,14 +17,7 @@ interface User {
   updatedAt: string;
 }
 
-// Validation
-const createUserSchema = z.object({
-  fullName: z.string().min(3).max(50),
-  role: z.enum(['STAFF', 'MEMBER']),
-  dateOfBirth: z.string().datetime().optional(),
-});
-
-const updateUserSchema = createUserSchema.partial();
+// Validation schemas imported from shared-validation
 
 // DB
 const defaultData = { users: [] as User[] };
@@ -62,7 +56,10 @@ async function bootstrap() {
   app.get('/health', async () => ({ ok: true }));
 
   // --- SSE simple event hub ---
-  const sseClients = new Set<{ id: number; reply: any }>();
+  const sseClients = new Set<{
+    id: number;
+    reply: { raw: { write: (chunk: string) => void } };
+  }>();
   let clientSeq = 0;
   function broadcast(event: string, data: unknown = {}) {
     const payload = `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
@@ -112,10 +109,8 @@ async function bootstrap() {
     const db = await dbPromise;
     const parsed = createUserSchema.safeParse(req.body);
     if (!parsed.success) return res.status(400).send(parsed.error.format());
-    const now = new Date().toISOString();
-    const id =
-      (globalThis as any)?.crypto?.randomUUID?.() ??
-      `u_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    const now = nowIso();
+    const id = generateId();
     const user: User = { id, ...parsed.data, createdAt: now, updatedAt: now };
     db.data.users.unshift(user);
     await db.write();
@@ -133,7 +128,7 @@ async function bootstrap() {
     const updated: User = {
       ...db.data.users[idx],
       ...parsed.data,
-      updatedAt: new Date().toISOString(),
+      updatedAt: nowIso(),
     };
     db.data.users[idx] = updated;
     await db.write();
