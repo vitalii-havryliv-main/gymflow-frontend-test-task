@@ -16,6 +16,16 @@ export default defineConfig(() => ({
     host: 'localhost',
   },
   plugins: [react(), nxViteTsPaths(), nxCopyAssetsPlugin(['*.md'])],
+  resolve: {
+    alias: {
+      // Prevent Vite from bundling the React Native runtime on web
+      'react-native': 'react-native-web',
+    },
+  },
+  optimizeDeps: {
+    // Extra safety: do not prebundle the RN package in dev
+    exclude: ['react-native'],
+  },
   // Uncomment this if you are using workers.
   // worker: {
   //  plugins: [ nxViteTsPaths() ],

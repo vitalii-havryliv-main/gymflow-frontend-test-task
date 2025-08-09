@@ -1,17 +1,2 @@
-const { createGlobPatternsForDependencies } = require('@nx/react/tailwind');
-const { join } = require('path');
-
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    join(
-      __dirname,
-      '{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}'
-    ),
-    ...createGlobPatternsForDependencies(__dirname),
-  ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-};
+/** Tailwind v4 uses @import and @source from CSS; keep config minimal to avoid double-scanning */
+module.exports = {};

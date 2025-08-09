@@ -8,13 +8,21 @@ Quick start
 pnpm install
 ```
 
-2. Run Web (Vite dev server)
+2. Run API (Fastify + lowdb)
+
+```bash
+pnpm nx run api:serve
+```
+
+The API listens on port 3333 by default. Data is stored in `.data/api-db.json` and is git-ignored.
+
+3. Run Web (Vite dev server)
 
 ```bash
 pnpm nx run web:dev
 ```
 
-3. Run Mobile (Expo)
+4. Run Mobile (Expo)
 
 Option A – start dev server and choose platform from the prompt:
 
@@ -44,3 +52,9 @@ Notes
   - `pnpm --filter mobile exec expo start`
   - `pnpm --filter mobile exec expo start --ios`
   - `pnpm --filter mobile exec expo start --android`
+
+5. Run tests
+
+```bash
+pnpm test
+```

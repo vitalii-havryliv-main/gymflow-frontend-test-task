@@ -8,6 +8,8 @@
     "ios": "expo run:ios"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "1.23.1",
+    "@react-native-community/datetimepicker": "8.2.0",
     "@react-navigation/native": "^7.1.17",
     "@react-navigation/native-stack": "^7.3.24",
     "@testing-library/jest-native": "*",
@@ -15,6 +17,7 @@
     "expo": "*",
     "metro-config": "*",
     "nativewind": "^4.1.23",
+    "react": "18.3.1",
     "react-native": "0.76.9",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-reanimated": "~3.16.1",
@@ -22,7 +25,6 @@
     "react-native-screens": "~4.4.0",
     "react-native-svg": "*",
     "react-native-web": "*",
-    "tailwindcss": "^3.4.14",
-    "react": "18.3.1"
+    "tailwindcss": "^3.4.14"
   }
 }

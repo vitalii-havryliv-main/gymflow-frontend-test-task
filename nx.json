@@ -8,6 +8,11 @@
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["default", "^default"]
+    },
+    "@nx/esbuild:esbuild": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["default", "^default"]
     }
   },
   "plugins": [
@@ -76,7 +81,8 @@
       },
       "library": {
         "style": "css",
-        "linter": "none"
+        "linter": "none",
+        "unitTestRunner": "vitest"
       }
     }
   }
