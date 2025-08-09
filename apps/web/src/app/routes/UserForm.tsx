@@ -32,7 +32,7 @@ export default function UserFormRoute() {
         </h2>
         <form
           onSubmit={onSubmit}
-          className="grid gap-4 min-h-0 flex-1 overflow-y-auto pr-1"
+          className="grid gap-4 min-h-0 flex-1 overflow-y-auto p-1"
         >
           <LabeledField
             label="Full Name"
@@ -103,7 +103,7 @@ export default function UserFormRoute() {
             <button
               type="submit"
               disabled={!form.formState.isValid}
-              className={`rounded-md px-4 py-2 bg-[var(--primary)] text-[var(--button-text)] ${
+              className={`rounded-md px-4 hover:scale-[1.02] transition-transform duration-150 py-2 bg-[var(--primary)] text-[var(--button-text)] ${
                 form.formState.isValid ? '' : 'opacity-60'
               }`}
             >
@@ -113,7 +113,7 @@ export default function UserFormRoute() {
               <button
                 type="button"
                 onClick={onRemove}
-                className="rounded-md border px-4 py-2 border-[var(--border)]"
+                className="rounded-md border px-4 hover:scale-[1.02] bg-[var(--danger)] text-[var(--button-text)] transition-transform duration-150 py-2 border-[var(--border)]"
               >
                 Remove User
               </button>
