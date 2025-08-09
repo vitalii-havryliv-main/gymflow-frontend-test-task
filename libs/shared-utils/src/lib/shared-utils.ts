@@ -5,7 +5,7 @@ export function sharedUtils(): string {
 }
 
 export function generateId(): string {
-  return globalThis?.crypto?.randomUUID?.() ?? uuidv4();
+  return uuidv4() ?? globalThis?.crypto?.randomUUID?.();
 }
 
 export function nowIso(): string {
