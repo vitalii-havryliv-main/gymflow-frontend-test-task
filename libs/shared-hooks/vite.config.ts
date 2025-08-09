@@ -6,6 +6,7 @@ export default defineConfig({
   cacheDir: '../../node_modules/.vite/shared-hooks',
   plugins: [nxViteTsPaths()],
   test: {
+    passWithNoTests: true,
     reporters: ['default'],
     coverage: {
       reports: ['text', 'lcov'],
