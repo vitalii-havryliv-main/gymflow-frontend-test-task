@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useUsers } from 'shared-store';
 import { UserTable } from '../components/UserTable';
-import { ThemeToggle } from '../theme';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function UsersList() {
   const { users } = useUsers();
