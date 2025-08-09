@@ -41,7 +41,6 @@ export function AppNavigator() {
             component={UsersListScreen}
             options={{
               title: 'Gymflow',
-              ...(Platform.OS === 'android' && { animation: 'none' }),
             }}
           />
           <Stack.Screen
@@ -49,7 +48,6 @@ export function AppNavigator() {
             component={UserFormScreen}
             options={{
               title: 'User',
-              ...(Platform.OS === 'android' && { animation: 'none' }),
             }}
           />
         </Stack.Navigator>
