@@ -51,6 +51,48 @@ async function bootstrap() {
 
   app.get('/health', async () => ({ ok: true }));
 
+  // --- SSE simple event hub ---
+  const sseClients = new Set<{ id: number; reply: any }>();
+  let clientSeq = 0;
+  function broadcast(event: string, data: unknown = {}) {
+    const payload = `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
+    for (const { reply } of sseClients) {
+      try {
+        reply.raw.write(payload);
+      } catch {
+        // ignore write failures
+      }
+    }
+  }
+
+  app.get('/events', async (req, reply) => {
+    reply.headers({
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      Connection: 'keep-alive',
+    });
+    reply.raw.flushHeaders?.();
+
+    const id = ++clientSeq;
+    sseClients.add({ id, reply });
+    reply.raw.write(`event: connected\ndata: {"ok":true}\n\n`);
+
+    const heartbeat = setInterval(() => {
+      try {
+        reply.raw.write(`: ping\n\n`);
+      } catch {
+        // ignore
+      }
+    }, 15000);
+
+    req.raw.on('close', () => {
+      clearInterval(heartbeat);
+      sseClients.forEach((c) => {
+        if (c.id === id) sseClients.delete(c);
+      });
+    });
+  });
+
   app.get('/users', async () => {
     const db = await dbPromise;
     return db.data.users;
@@ -67,6 +109,7 @@ async function bootstrap() {
     const user: User = { id, ...parsed.data, createdAt: now, updatedAt: now };
     db.data.users.unshift(user);
     await db.write();
+    broadcast('users-updated');
     return user;
   });
 
@@ -84,6 +127,7 @@ async function bootstrap() {
     };
     db.data.users[idx] = updated;
     await db.write();
+    broadcast('users-updated');
     return updated;
   });
 
@@ -92,6 +136,7 @@ async function bootstrap() {
     const id = (req.params as any).id as string;
     db.data.users = db.data.users.filter((u) => u.id !== id);
     await db.write();
+    broadcast('users-updated');
     return { ok: true };
   });
 
