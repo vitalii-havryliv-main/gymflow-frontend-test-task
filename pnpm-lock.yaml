@@ -256,6 +256,8 @@ importers:
         specifier: ^3.4.14
         version: 3.4.17
 
+  libs/shared-hooks: {}
+
   libs/shared-store: {}
 
   libs/shared-types:
