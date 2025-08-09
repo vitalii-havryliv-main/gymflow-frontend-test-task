@@ -50,7 +50,12 @@ export function UsersListScreen({ navigation }: { navigation: NavProp }) {
             />
           </View>
         ) : users.length === 0 ? (
-          <View style={styles.emptyState}>
+          <View
+            style={[
+              styles.emptyState,
+              { borderColor: theme.colors.emptyBorder },
+            ]}
+          >
             <Text
               style={[styles.emptyText, { color: theme.colors.textSecondary }]}
             >
