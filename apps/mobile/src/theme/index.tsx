@@ -11,6 +11,7 @@ export type Theme = {
     textPrimary: string;
     textSecondary: string;
     border: string;
+    emptyBorder: string;
     primary: string;
     danger: string;
   };
@@ -21,6 +22,7 @@ const lightTheme: Theme = {
   mode: 'light',
   colors: {
     background: '#ffffff',
+    emptyBorder: '#000000',
     surface: '#ffffff',
     textPrimary: '#111827',
     textSecondary: '#374151',
@@ -39,6 +41,7 @@ const darkTheme: Theme = {
     textPrimary: '#ffffff',
     textSecondary: '#d1d5db',
     border: '#2a2a2a',
+    emptyBorder: '#ffffff',
     primary: '#ffffff',
     danger: '#ef4444',
   },
