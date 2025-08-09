@@ -86,7 +86,18 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       '--icon-filter',
       t.mode === 'dark' ? 'invert(1) brightness(1.2)' : 'none'
     );
-    document.body.style.background = t.colors.background;
+
+    // Theme-aware app-like gradients (purple-focused)
+    const lightBg =
+      'radial-gradient(70rem 50rem at 5% -10%, rgba(196,181,253,0.40), transparent 55%),\
+       radial-gradient(60rem 45rem at 105% 0%, rgba(233,213,255,0.30), transparent 55%),\
+       radial-gradient(80rem 60rem at 50% 120%, rgba(186,230,253,0.16), transparent 60%)';
+    const darkBg =
+      'radial-gradient(70rem 50rem at 5% -10%, rgba(168,85,247,0.42), transparent 55%),\
+       radial-gradient(60rem 45rem at 110% 0%, rgba(99,102,241,0.28), transparent 55%),\
+       radial-gradient(85rem 65rem at 50% 120%, rgba(236,72,153,0.20), transparent 60%)';
+    r.style.setProperty('--app-bg', t.mode === 'dark' ? darkBg : lightBg);
+    document.body.style.backgroundColor = t.colors.background; // base color under gradients
     document.body.style.color = t.colors.textPrimary;
     window.localStorage.setItem('theme-mode', value.mode);
   }, [value.theme, value.mode]);

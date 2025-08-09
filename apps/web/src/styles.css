@@ -2,6 +2,21 @@
 @source "./**/*.{html,ts,tsx}";
 @source "../../libs/**/*.{ts,tsx}";
 
+/* Global layout and theme-aware background */
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background-color: var(--background);
+  background-image: var(--app-bg);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
 /* Ensure native date input icon matches theme */
 input.date-input::-webkit-calendar-picker-indicator {
   filter: var(--icon-filter, none);
