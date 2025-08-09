@@ -19,7 +19,7 @@ export function UserTable({ users }: { users: User[] }) {
     );
   }
   return (
-    <div className="grid gap-3 max-h-[60vh] lg:max-h-[70vh] overflow-y-auto pr-2 pb-2">
+    <div className="grid gap-3">
       {users.map((u) => (
         <button
           key={u.id}
