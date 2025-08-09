@@ -43,7 +43,7 @@ export function UsersListScreen({ navigation }: { navigation: NavProp }) {
         )}
 
         {!isHydrated ? (
-          <View style={{ paddingVertical: 24 }}>
+          <View style={styles.loadingContainer}>
             <ActivityIndicator
               size="small"
               color={theme.colors.textSecondary}
@@ -52,7 +52,7 @@ export function UsersListScreen({ navigation }: { navigation: NavProp }) {
         ) : users.length === 0 ? (
           <View style={styles.emptyState}>
             <Text
-              style={{ color: theme.colors.textSecondary, marginBottom: 12 }}
+              style={[styles.emptyText, { color: theme.colors.textSecondary }]}
             >
               Get started by adding your first user.
             </Text>
@@ -68,8 +68,10 @@ export function UsersListScreen({ navigation }: { navigation: NavProp }) {
           <FlatList
             data={users}
             keyExtractor={(item) => item.id}
-            ItemSeparatorComponent={() => <View style={{ height: 1 }} />}
-            contentContainerStyle={{ paddingBottom: 16, height: '100%' }}
+            ItemSeparatorComponent={ListSeparator}
+            style={styles.list}
+            contentContainerStyle={styles.listContent}
+            showsVerticalScrollIndicator
             renderItem={({ item: u }) => (
               <Animated.View entering={FadeIn}>
                 <Pressable
@@ -101,11 +103,16 @@ export function UsersListScreen({ navigation }: { navigation: NavProp }) {
   );
 }
 
+function ListSeparator() {
+  return <View style={styles.separator} />;
+}
+
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  content: { padding: 16 },
+  content: { flex: 1, padding: 16 },
   title: { fontSize: 24, fontWeight: '800', marginBottom: 12 },
   subtitle: { fontSize: 14, marginBottom: 12 },
+  loadingContainer: { paddingVertical: 24 },
   listItem: {
     paddingVertical: 12,
     paddingHorizontal: 14,
@@ -139,8 +146,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
   },
+  emptyText: { marginBottom: 12 },
   addButton: {
     paddingHorizontal: 16,
     borderRadius: 14,
   },
+  list: { flex: 1 },
+  listContent: { paddingVertical: 16 },
+  separator: { height: 1 },
 });
