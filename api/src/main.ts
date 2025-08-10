@@ -112,7 +112,7 @@ async function bootstrap() {
 
   app.put('/users/:id', async (req, res) => {
     const db = await dbPromise;
-    const id = (req.params as any).id as string;
+    const id = (req.params as { id: string }).id;
     const parsed = updateUserSchema.safeParse(req.body);
     if (!parsed.success) return res.status(400).send(parsed.error.format());
     const idx = db.data.users.findIndex((u) => u.id === id);
@@ -128,9 +128,9 @@ async function bootstrap() {
     return updated;
   });
 
-  app.delete('/users/:id', async (req, res) => {
+  app.delete('/users/:id', async (req) => {
     const db = await dbPromise;
-    const id = (req.params as any).id as string;
+    const id = (req.params as { id: string }).id;
     db.data.users = db.data.users.filter((u) => u.id !== id);
     await db.write();
     broadcast('users-updated');
