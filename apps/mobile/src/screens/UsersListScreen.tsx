@@ -21,7 +21,6 @@ type NavProp = {
 export function UsersListScreen({ navigation }: { navigation: NavProp }) {
   const { users, isHydrated } = useUsers();
   const { theme } = useTheme();
-  console.log(isHydrated);
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
