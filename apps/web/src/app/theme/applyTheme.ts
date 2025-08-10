@@ -1,4 +1,4 @@
-import type { Theme, Mode } from './types';
+import type { Mode, Theme } from './types';
 
 export function applyThemeToDOM(theme: Theme, mode: Mode) {
   const r = document.documentElement;
@@ -11,19 +11,25 @@ export function applyThemeToDOM(theme: Theme, mode: Mode) {
   r.style.setProperty('--danger', '#ef4444');
   r.style.setProperty('--button-text', mode === 'dark' ? '#000000' : '#ffffff');
   r.style.setProperty('--chip-bg', mode === 'dark' ? '#111319' : '#f1f5f9');
-  r.style.setProperty('--icon-filter', mode === 'dark' ? 'invert(1) brightness(1.2)' : 'none');
+  r.style.setProperty(
+    '--icon-filter',
+    mode === 'dark' ? 'invert(1) brightness(1.2)' : 'none'
+  );
 
   const lightBg =
-    'radial-gradient(70rem 50rem at 5% -10%, rgba(196,181,253,0.40), transparent 55%),\
-     radial-gradient(60rem 45rem at 105% 0%, rgba(233,213,255,0.30), transparent 55%),\
-     radial-gradient(80rem 60rem at 50% 120%, rgba(186,230,253,0.16), transparent 60%)';
+    'radial-gradient(80rem 55rem at 10% 0%, rgba(167,139,250,0.35), transparent 55%),\
+     ' +
+    'radial-gradient(70rem 50rem at 95% 5%, rgba(240,171,252,0.22), transparent 55%),\
+     ' +
+    'radial-gradient(95rem 75rem at 50% 115%, rgba(240,171,252,0.22), transparent 60%)';
   const darkBg =
-    'radial-gradient(70rem 50rem at 5% -10%, rgba(168,85,247,0.42), transparent 55%),\
-     radial-gradient(60rem 45rem at 110% 0%, rgba(99,102,241,0.28), transparent 55%),\
-     radial-gradient(85rem 65rem at 50% 120%, rgba(236,72,153,0.20), transparent 60%)';
+    'radial-gradient(80rem 55rem at 8% -5%, rgba(168,85,247,0.40), transparent 55%),\
+     ' +
+    'radial-gradient(70rem 50rem at 100% 0%, rgba(79,70,229,0.24), transparent 55%),\
+     ' +
+    'radial-gradient(95rem 75rem at 50% 115%, rgba(236,72,153,0.18), transparent 60%)';
   r.style.setProperty('--app-bg', mode === 'dark' ? darkBg : lightBg);
 
   document.body.style.backgroundColor = theme.colors.background;
   document.body.style.color = theme.colors.textPrimary;
 }
-
