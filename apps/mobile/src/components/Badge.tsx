@@ -9,9 +9,8 @@ type BadgeProps = {
 export function Badge({ label }: BadgeProps) {
   const { theme } = useTheme();
 
-  const bgColor = theme.mode === 'dark' ? '#111319' : '#f1f5f9';
-  const textColor =
-    theme.mode === 'dark' ? theme.colors.textSecondary : '#0f172a';
+  const bgColor = theme.colors.surface;
+  const textColor = theme.colors.textPrimary;
   const borderColor = theme.colors.border;
 
   return (
