@@ -15,4 +15,4 @@ export interface CreateUserInput {
   dateOfBirth?: string;
 }
 
-export interface UpdateUserInput extends Partial<CreateUserInput> {}
+export type UpdateUserInput = Partial<CreateUserInput>;
