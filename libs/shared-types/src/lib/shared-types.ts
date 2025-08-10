@@ -4,9 +4,9 @@ export interface User {
   id: string;
   fullName: string;
   role: UserRole;
-  dateOfBirth?: string; // ISO string (optional)
-  createdAt: string; // ISO string
-  updatedAt: string; // ISO string
+  dateOfBirth?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface CreateUserInput {

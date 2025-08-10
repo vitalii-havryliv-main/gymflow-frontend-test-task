@@ -29,7 +29,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     [mode]
   );
 
-  // Apply CSS variables whenever theme changes
   React.useEffect(() => {
     applyThemeToDOM(value.theme, value.mode);
     window.localStorage.setItem('theme-mode', value.mode);

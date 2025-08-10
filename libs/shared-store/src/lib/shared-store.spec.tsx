@@ -18,9 +18,7 @@ describe('Users store', () => {
   it('creates and updates a user', async () => {
     const { result } = renderHook(() => useUsers(), { wrapper });
 
-    // Wait for initial hydration
     await act(async () => {
-      // microtask to allow useEffect hydration to dispatch
       await Promise.resolve();
     });
 

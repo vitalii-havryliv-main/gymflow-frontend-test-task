@@ -6,7 +6,6 @@ import * as path from 'path';
 import { generateId, nowIso } from 'shared-utils';
 import { createUserSchema, updateUserSchema } from 'shared-validation';
 
-// Types
 type UserRole = 'STAFF' | 'MEMBER';
 interface User {
   id: string;
@@ -17,23 +16,18 @@ interface User {
   updatedAt: string;
 }
 
-// Validation schemas imported from shared-validation
-
-// DB
 const defaultData = { users: [] as User[] };
-// Resolve DB location to a writable, non-repo path by default
 const dataDir = process.env.API_DATA_DIR ?? path.join(process.cwd(), '.data');
 try {
   mkdirSync(dataDir, { recursive: true });
-} catch {
-  // ignore mkdir errors; lowdb will attempt to create the file on write
+} catch (error) {
+  console.error(error);
 }
 const dbFile = process.env.API_DB_FILE ?? path.join(dataDir, 'api-db.json');
 const dbPromise = JSONFilePreset(dbFile, defaultData);
 
-// Server
 const app = Fastify({ logger: true });
-// Bootstrap server without top-level await (for TS config compatibility)
+
 async function bootstrap() {
   await app.register(cors, {
     origin: true,
@@ -43,7 +37,6 @@ async function bootstrap() {
     strictPreflight: false,
   });
 
-  // Fallback preflight handlers (some envs require explicit OPTIONS routes)
   app.options('/users', async (_req, reply) => {
     reply.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
     reply.send();
@@ -55,7 +48,6 @@ async function bootstrap() {
 
   app.get('/health', async () => ({ ok: true }));
 
-  // --- SSE simple event hub ---
   const sseClients = new Set<{
     id: number;
     reply: { raw: { write: (chunk: string) => void } };
@@ -67,7 +59,7 @@ async function bootstrap() {
       try {
         reply.raw.write(payload);
       } catch {
-        // ignore write failures
+        console.error('Error writing to SSE client');
       }
     }
   }
@@ -88,7 +80,7 @@ async function bootstrap() {
       try {
         reply.raw.write(`: ping\n\n`);
       } catch {
-        // ignore
+        console.error('Error writing to SSE client');
       }
     }, 15000);
 

@@ -17,8 +17,6 @@ export function useUsersForm(
     },
   });
 
-  // When existing user data becomes available (e.g., after hydration),
-  // reset the form to reflect it. Also handles switching between users.
   useEffect(() => {
     if (existing) {
       form.reset({
@@ -27,7 +25,6 @@ export function useUsersForm(
         dateOfBirth: existing.dateOfBirth ?? undefined,
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [existing?.id, existing?.fullName, existing?.role, existing?.dateOfBirth]);
 
   return form;

@@ -1,4 +1,3 @@
-// keep framer-motion import minimal, but we'll remove hover scale per feedback
 import { AnimatePresence, motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import type { User } from 'shared-types';

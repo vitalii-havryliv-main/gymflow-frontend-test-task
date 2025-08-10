@@ -1,4 +1,3 @@
-// Use native Date to avoid typing issues for luxon declarations in web/mobile builds
 import React, {
   createContext,
   useCallback,
@@ -26,7 +25,7 @@ type UsersAction =
   | { type: 'UPDATE'; payload: User }
   | { type: 'REMOVE'; payload: { id: string } };
 
-const initialState: UsersState = { users: [], isHydrated: false };
+const initialState: UsersState = { users: [], isHydrated: true };
 
 function usersReducer(state: UsersState, action: UsersAction): UsersState {
   switch (action.type) {
@@ -63,13 +62,11 @@ function haveUsersChanged(prev: User[], next: User[]): boolean {
   return false;
 }
 
-// Persistence interface so we can swap localStorage/AsyncStorage later if needed
 export interface UsersPersistence {
   load(): Promise<User[]>;
   save(users: User[]): Promise<void>;
 }
 
-// Browser localStorage adapter
 export function createLocalStoragePersistence(
   key = 'gf_users'
 ): UsersPersistence {
@@ -86,21 +83,18 @@ export function createLocalStoragePersistence(
       try {
         globalThis.localStorage?.setItem(key, JSON.stringify(users));
       } catch {
-        // ignore
+        console.error('Error loading users');
       }
     },
   };
 }
 
-// React Native AsyncStorage adapter (runtime-only import in mobile app)
 export function createAsyncStoragePersistence(
   key = 'gf_users'
 ): UsersPersistence {
   return {
     async load() {
       try {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore - imported at runtime in React Native
         const AsyncStorage = (
           await import('@react-native-async-storage/async-storage')
         ).default;
@@ -112,14 +106,12 @@ export function createAsyncStoragePersistence(
     },
     async save(users: User[]) {
       try {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore - imported at runtime in React Native
         const AsyncStorage = (
           await import('@react-native-async-storage/async-storage')
         ).default;
         await AsyncStorage.setItem(key, JSON.stringify(users));
       } catch {
-        // ignore
+        console.error('Error saving users');
       }
     },
   };
@@ -170,7 +162,6 @@ export function UsersProvider({
     };
   }, [repository]);
 
-  // SSE subscription + revalidate on focus/online (web) or foreground (RN)
   useEffect(() => {
     if (!apiBaseUrl) return;
     let cancelled = false;
@@ -181,11 +172,10 @@ export function UsersProvider({
         if (!haveUsersChanged(latestUsersRef.current, data)) return;
         dispatch({ type: 'HYDRATE', payload: data });
       } catch {
-        // ignore
+        console.error('Error rehydrating users');
       }
     };
 
-    // SSE (web only or envs with EventSource polyfill) or polling fallback
     let es: EventSource | undefined;
     let pollId: ReturnType<typeof setInterval> | undefined;
     const hasEventSource =
@@ -201,17 +191,15 @@ export function UsersProvider({
           rehydrate as EventListener
         );
       } catch {
-        // ignore
+        console.error('Error adding EventSource listener');
       }
     } else {
-      // Mobile (React Native) fallback: lightweight polling
       const POLL_MS = 2000;
       pollId = setInterval(() => {
         void rehydrate();
       }, POLL_MS);
     }
 
-    // Web focus/online
     const hasWindow = typeof window !== 'undefined';
     const canAddWinListener =
       hasWindow && typeof window.addEventListener === 'function';
@@ -222,7 +210,6 @@ export function UsersProvider({
       window.addEventListener('online', onOnline);
     }
 
-    // React Native AppState foreground revalidate (guarded require)
     let rnSub: { remove?: () => void } | undefined;
     if (
       !canAddWinListener &&
@@ -242,7 +229,7 @@ export function UsersProvider({
           if (state === 'active') void rehydrate();
         });
       } catch {
-        // ignore if not available
+        console.error('Error adding AppState listener');
       }
     }
 
